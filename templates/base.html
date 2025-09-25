@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Patient Intake - Secure Healthcare Forms{% endblock %}</title>
+    
+    <!-- Bootstrap CSS for mobile-responsive design -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom styles for healthcare theme -->
+    <style>
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #e8f4fd;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --text-color: #333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #ffffff 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+        
+        .header-brand {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1e3d72 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .main-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .form-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .form-body {
+            padding: 2rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 12px 24px;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d72;
+            border-color: #1e3d72;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 12px;
+            font-size: 16px; /* Prevent zoom on iOS */
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        .invalid-feedback {
+            display: block;
+            font-size: 14px;
+        }
+        
+        .progress-indicator {
+            height: 4px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #1e3d72);
+            transition: width 0.3s ease;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .security-notice {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-size: 14px;
+        }
+        
+        .footer-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: center;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 1rem;
+                border-radius: 8px;
+            }
+            
+            .form-header, .form-body {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+        }
+        
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .form-check-container {
+            margin: 0.5rem 0;
+        }
+
+        .page-header {
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <header class="header-brand">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h1 class="h4 mb-0">🏥 Secure Patient Intake</h1>
+                </div>
+                <div class="col-auto">
+                    <small>HIPAA Compliant</small>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container-fluid">
+        <div class="main-container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <footer class="footer-info">
+        <p>&copy; 2024 Patient Intake System v2.0 | Your information is protected by HIPAA privacy laws</p>
+    </footer>
+    
+    <!-- Bootstrap JS for enhanced mobile experience -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

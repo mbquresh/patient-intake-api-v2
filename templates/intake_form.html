@@ -1,0 +1,529 @@
+{% extends "base.html" %}
+
+{% block title %}Pediatric Patient Intake Form - Houston Pediatric Center{% endblock %}
+
+{% block content %}
+<div class="form-header">
+    <h2>Pediatric Patient Intake Form</h2>
+    <p class="mb-0">Houston Pediatric Center</p>
+    <small>Please fill out all sections completely</small>
+</div>
+
+<div class="form-body">
+    <div class="security-notice">
+        <strong>🔒 Secure Medical Form:</strong> This form is encrypted and HIPAA-compliant. 
+        All information is transmitted securely to Houston Pediatric Center.
+    </div>
+
+    <div class="progress-indicator">
+        <div class="progress-bar" style="width: 0%" id="progressBar"></div>
+    </div>
+
+    <form method="POST" action="{{ url_for('submit_pediatric_intake', token=token) }}" id="pediatricForm" novalidate>
+        {{ form.hidden_tag() }}
+        
+        <!-- PAGE 1 -->
+        <div class="page-header">
+            <h3 class="text-primary">Page 1 of 2</h3>
+        </div>
+        
+        <!-- Patient History Section -->
+        <div class="section-title">👶 Patient History</div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.patient_name.label(class="form-label required") }}
+                {{ form.patient_name(class="form-control" + (" is-invalid" if form.patient_name.errors else "")) }}
+                {% for error in form.patient_name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-3 mb-3">
+                {{ form.patient_age.label(class="form-label required") }}
+                {{ form.patient_age(class="form-control" + (" is-invalid" if form.patient_age.errors else "")) }}
+                {% for error in form.patient_age.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-3 mb-3">
+                {{ form.patient_sex.label(class="form-label required") }}
+                {{ form.patient_sex(class="form-select" + (" is-invalid" if form.patient_sex.errors else "")) }}
+                {% for error in form.patient_sex.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            {{ form.patient_dob.label(class="form-label required") }}
+            {{ form.patient_dob(class="form-control" + (" is-invalid" if form.patient_dob.errors else "")) }}
+            {% for error in form.patient_dob.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Birth History Section -->
+        <div class="section-title">🍼 Birth History</div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.delivery_type.label(class="form-label required") }}
+                {{ form.delivery_type(class="form-select" + (" is-invalid" if form.delivery_type.errors else "")) }}
+                {% for error in form.delivery_type.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.birth_timing.label(class="form-label required") }}
+                {{ form.birth_timing(class="form-select" + (" is-invalid" if form.birth_timing.errors else "")) }}
+                {% for error in form.birth_timing.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.birth_weeks.label(class="form-label") }}
+                {{ form.birth_weeks(class="form-control" + (" is-invalid" if form.birth_weeks.errors else ""), placeholder="e.g., 40") }}
+                {% for error in form.birth_weeks.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.birth_weight.label(class="form-label") }}
+                {{ form.birth_weight(class="form-control" + (" is-invalid" if form.birth_weight.errors else ""), placeholder="e.g., 7.5", step="0.1") }}
+                {% for error in form.birth_weight.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label required">Baby passed hearing test?</label>
+                <div class="form-check-container">
+                    {% for subfield in form.hearing_test_passed %}
+                        <div class="form-check form-check-inline">
+                            {{ subfield(class="form-check-input") }}
+                            {{ subfield.label(class="form-check-label") }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% for error in form.hearing_test_passed.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label required">Did baby get Hep B vaccine at birth?</label>
+                <div class="form-check-container">
+                    {% for subfield in form.hep_b_vaccine %}
+                        <div class="form-check form-check-inline">
+                            {{ subfield(class="form-check-input") }}
+                            {{ subfield.label(class="form-check-label") }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% for error in form.hep_b_vaccine.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            {{ form.pregnancy_complications.label(class="form-label") }}
+            {{ form.pregnancy_complications(class="form-control" + (" is-invalid" if form.pregnancy_complications.errors else ""), rows="3") }}
+            {% for error in form.pregnancy_complications.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Child's Medical History -->
+        <div class="section-title">🏥 Child's Past Medical/Surgical History</div>
+        <div class="mb-3">
+            <label class="form-label">Check if following problems exist:</label>
+            <div class="checkbox-grid">
+                {% for subfield in form.child_medical_history %}
+                    <div class="form-check">
+                        {{ subfield(class="form-check-input") }}
+                        {{ subfield.label(class="form-check-label") }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Family Medical History -->
+        <div class="section-title">👨‍👩‍👧‍👦 Family Medical History</div>
+        <div class="mb-3">
+            <label class="form-label">Check if following problems exist in family:</label>
+            <div class="checkbox-grid">
+                {% for subfield in form.family_medical_history %}
+                    <div class="form-check">
+                        {{ subfield(class="form-check-input") }}
+                        {{ subfield.label(class="form-check-label") }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Social History -->
+        <div class="section-title">🏠 Social History</div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.household_members.label(class="form-label required") }}
+                {{ form.household_members(class="form-control" + (" is-invalid" if form.household_members.errors else "")) }}
+                {% for error in form.household_members.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label required">Any pets?</label>
+                <div class="form-check-container">
+                    {% for subfield in form.any_pets %}
+                        <div class="form-check form-check-inline">
+                            {{ subfield(class="form-check-input") }}
+                            {{ subfield.label(class="form-check-label") }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% for error in form.any_pets.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label required">Anyone smokes?</label>
+                <div class="form-check-container">
+                    {% for subfield in form.anyone_smokes %}
+                        <div class="form-check form-check-inline">
+                            {{ subfield(class="form-check-input") }}
+                            {{ subfield.label(class="form-check-label") }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% for error in form.anyone_smokes.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label required">Any exposure to lead?</label>
+                <div class="form-check-container">
+                    {% for subfield in form.lead_exposure %}
+                        <div class="form-check form-check-inline">
+                            {{ subfield(class="form-check-input") }}
+                            {{ subfield.label(class="form-check-label") }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% for error in form.lead_exposure.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="mb-4">
+            <label class="form-label required">Do you authorize the clinic to leave a voice message regarding test results?</label>
+            <div class="form-check-container">
+                {% for subfield in form.voice_message_consent %}
+                    <div class="form-check form-check-inline">
+                        {{ subfield(class="form-check-input") }}
+                        {{ subfield.label(class="form-check-label") }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% for error in form.voice_message_consent.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Signature Section Page 1 -->
+        <div class="section-title">✍️ Signature (Page 1)</div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                {{ form.guardian_signature_name.label(class="form-label required") }}
+                {{ form.guardian_signature_name(class="form-control" + (" is-invalid" if form.guardian_signature_name.errors else "")) }}
+                {% for error in form.guardian_signature_name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.guardian_relationship.label(class="form-label required") }}
+                {{ form.guardian_relationship(class="form-control" + (" is-invalid" if form.guardian_relationship.errors else "")) }}
+                {% for error in form.guardian_relationship.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.signature_date.label(class="form-label required") }}
+                {{ form.signature_date(class="form-control" + (" is-invalid" if form.signature_date.errors else "")) }}
+                {% for error in form.signature_date.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <hr class="my-5">
+
+        <!-- PAGE 2 -->
+        <div class="page-header">
+            <h3 class="text-primary">Page 2 of 2 - Patient Information</h3>
+        </div>
+        
+        <!-- Patient Information -->
+        <div class="section-title">👤 Patient Information</div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.patient_last_name.label(class="form-label required") }}
+                {{ form.patient_last_name(class="form-control" + (" is-invalid" if form.patient_last_name.errors else "")) }}
+                {% for error in form.patient_last_name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.patient_first_name.label(class="form-label required") }}
+                {{ form.patient_first_name(class="form-control" + (" is-invalid" if form.patient_first_name.errors else "")) }}
+                {% for error in form.patient_first_name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                {{ form.patient_dob_page2.label(class="form-label required") }}
+                {{ form.patient_dob_page2(class="form-control" + (" is-invalid" if form.patient_dob_page2.errors else "")) }}
+                {% for error in form.patient_dob_page2.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.patient_age_page2.label(class="form-label required") }}
+                {{ form.patient_age_page2(class="form-control" + (" is-invalid" if form.patient_age_page2.errors else "")) }}
+                {% for error in form.patient_age_page2.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-4 mb-3">
+                {{ form.patient_gender.label(class="form-label required") }}
+                {{ form.patient_gender(class="form-select" + (" is-invalid" if form.patient_gender.errors else "")) }}
+                {% for error in form.patient_gender.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Address -->
+        <div class="mb-3">
+            {{ form.patient_address.label(class="form-label required") }}
+            {{ form.patient_address(class="form-control" + (" is-invalid" if form.patient_address.errors else "")) }}
+            {% for error in form.patient_address.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.patient_city.label(class="form-label required") }}
+                {{ form.patient_city(class="form-control" + (" is-invalid" if form.patient_city.errors else "")) }}
+                {% for error in form.patient_city.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-3 mb-3">
+                {{ form.patient_state.label(class="form-label required") }}
+                {{ form.patient_state(class="form-select" + (" is-invalid" if form.patient_state.errors else "")) }}
+                {% for error in form.patient_state.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-3 mb-3">
+                {{ form.patient_zip.label(class="form-label required") }}
+                {{ form.patient_zip(class="form-control" + (" is-invalid" if form.patient_zip.errors else "")) }}
+                {% for error in form.patient_zip.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Parent/Guardian Information -->
+        <div class="section-title">👨‍👩‍👧 Parent/Guardian Information</div>
+        
+        <h6 class="text-secondary">Mother's Information</h6>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.mother_name.label(class="form-label") }}
+                {{ form.mother_name(class="form-control" + (" is-invalid" if form.mother_name.errors else "")) }}
+                {% for error in form.mother_name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.mother_phone.label(class="form-label") }}
+                {{ form.mother_phone(class="form-control" + (" is-invalid" if form.mother_phone.errors else "")) }}
+                {% for error in form.mother_phone.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.mother_address.label(class="form-label") }}
+                {{ form.mother_address(class="form-control" + (" is-invalid" if form.mother_address.errors else "")) }}
+                {% for error in form.mother_address.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.mother_cell.label(class="form-label") }}
+                {{ form.mother_cell(class="form-control" + (" is-invalid" if form.mother_cell.errors else "")) }}
+                {% for error in form.mother_cell.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <h6 class="text-secondary mt-4">Father's Information</h6>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.father_name.label(class="form-label") }}
+                {{ form.father_name(class="form-control" + (" is-invalid" if form.father_name.errors else "")) }}
+                {% for error in form.father_name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.father_phone.label(class="form-label") }}
+                {{ form.father_phone(class="form-control" + (" is-invalid" if form.father_phone.errors else "")) }}
+                {% for error in form.father_phone.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.father_address.label(class="form-label") }}
+                {{ form.father_address(class="form-control" + (" is-invalid" if form.father_address.errors else "")) }}
+                {% for error in form.father_address.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.father_cell.label(class="form-label") }}
+                {{ form.father_cell(class="form-control" + (" is-invalid" if form.father_cell.errors else "")) }}
+                {% for error in form.father_cell.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Emergency Contact -->
+        <h6 class="text-secondary mt-4">Emergency Contact</h6>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.emergency_contact_name.label(class="form-label required") }}
+                {{ form.emergency_contact_name(class="form-control" + (" is-invalid" if form.emergency_contact_name.errors else "")) }}
+                {% for error in form.emergency_contact_name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.emergency_contact_phone.label(class="form-label required") }}
+                {{ form.emergency_contact_phone(class="form-control" + (" is-invalid" if form.emergency_contact_phone.errors else "")) }}
+                {% for error in form.emergency_contact_phone.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Siblings Information -->
+        <div class="section-title">👨‍👩‍👧‍👦 Siblings Information</div>
+        <div class="mb-3">
+            {{ form.siblings_info.label(class="form-label") }}
+            {{ form.siblings_info(class="form-control" + (" is-invalid" if form.siblings_info.errors else ""), rows="3", placeholder="List names and dates of birth of all siblings in our facility") }}
+            {% for error in form.siblings_info.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Health Insurance Section -->
+        <div class="section-title">🏥 Health Insurance Information</div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.insurance_name.label(class="form-label") }}
+                {{ form.insurance_name(class="form-control" + (" is-invalid" if form.insurance_name.errors else "")) }}
+                {% for error in form.insurance_name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.insurance_id.label(class="form-label") }}
+                {{ form.insurance_id(class="form-control" + (" is-invalid" if form.insurance_id.errors else "")) }}
+                {% for error in form.insurance_id.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.insurance_group.label(class="form-label") }}
+                {{ form.insurance_group(class="form-control" + (" is-invalid" if form.insurance_group.errors else "")) }}
+                {% for error in form.insurance_group.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.pharmacy_name.label(class="form-label") }}
+                {{ form.pharmacy_name(class="form-control" + (" is-invalid" if form.pharmacy_name.errors else "")) }}
+                {% for error in form.pharmacy_name.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            {{ form.pharmacy_phone.label(class="form-label") }}
+            {{ form.pharmacy_phone(class="form-control" + (" is-invalid" if form.pharmacy_phone.errors else "")) }}
+            {% for error in form.pharmacy_phone.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Consent Section -->
+        <div class="section-title">📋 Consent and Authorization</div>
+        <div class="mb-3">
+            <div class="form-check">
+                {{ form.treatment_consent(class="form-check-input" + (" is-invalid" if form.treatment_consent.errors else "")) }}
+                {{ form.treatment_consent.label(class="form-check-label required") }}
+                {% for error in form.treatment_consent.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Final Signature -->
+        <div class="section-title">✍️ Final Signature</div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                {{ form.parent_guardian_name_final.label(class="form-label required") }}
+                {{ form.parent_guardian_name_final(class="form-control" + (" is-invalid" if form.parent_guardian_name_final.errors else "")) }}
+                {% for error in form.parent_guardian_name_final.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6 mb-3">
+                {{ form.final_signature_date.label(class="form-label required") }}
+                {{ form.final_signature_date(class="form-control" + (" is-invalid" if form.final_signature_date.errors else "")) }}
+                {% for error in form.final_signature_date.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit Form</button>
+    </form>
+    </div>
+    {% endblock %}
+    

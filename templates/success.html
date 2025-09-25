@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Form Submitted Successfully - Patient Intake{% endblock %}
+
+{% block content %}
+<div class="form-header text-center" style="background: var(--success-color);">
+    <div class="mb-3">
+        <svg width="64" height="64" fill="currentColor" class="text-white" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.061L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>
+    </div>
+    <h2>Form Submitted Successfully!</h2>
+    <p class="mb-0">Your information has been securely transmitted to the clinic</p>
+</div>
+
+<div class="form-body text-center">
+    <div class="alert alert-success" role="alert">
+        <h5 class="alert-heading">✅ Submission Complete</h5>
+        <p class="mb-0">{{ message }}</p>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-0" style="background: #f8f9fa;">
+                <div class="card-body">
+                    <div class="text-success mb-2">
+                        <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                        </svg>
+                    </div>
+                    <h6>Secure Processing</h6>
+                    <small class="text-muted">Your data was encrypted and transmitted securely</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-0" style="background: #f8f9fa;">
+                <div class="card-body">
+                    <div class="text-primary mb-2">
+                        <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+                        </svg>
+                    </div>
+                    <h6>Clinic Notified</h6>
+                    <small class="text-muted">The clinic has been automatically notified of your submission</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 border-0" style="background: #f8f9fa;">
+                <div class="card-body">
+                    <div class="text-info mb-2">
+                        <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                    </div>
+                    <h6>Next Steps</h6>
+                    <small class="text-muted">You will be contacted to schedule your appointment</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4 p-4" style="background: #e8f4fd; border-radius: 8px;">
+        <h6 class="text-primary mb-3">What Happens Next?</h6>
+        <div class="row text-start">
+            <div class="col-md-6">
+                <ul class="list-unstyled">
+                    <li class="mb-2">📋 <strong>Review Process:</strong> Our staff will review your information</li>
+                    <li class="mb-2">📞 <strong>Contact:</strong> We'll call you within 1-2 business days</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="list-unstyled">
+                    <li class="mb-2">📅 <strong>Scheduling:</strong> We'll help schedule your appointment</li>
+                    <li class="mb-2">💳 <strong>Insurance:</strong> We'll verify your insurance coverage</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <h6>Have Questions?</h6>
+        <p class="text-muted">
+            If you need to make changes to your information or have questions about your submission, 
+            please call the clinic directly.
+        </p>
+        <small class="text-muted">
+            <strong>Important:</strong> This form link has been used and is no longer active for security purposes.
+        </small>
+    </div>
+    
+    <div class="mt-4">
+        <button class="btn btn-outline-primary" onclick="window.close();">
+            Close Window
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-close after 30 seconds if opened in new tab
+    setTimeout(function() {
+        if (window.opener) {
+            window.close();
+        }
+    }, 30000);
+});
+</script>
+{% endblock %}
