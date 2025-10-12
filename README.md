@@ -86,7 +86,7 @@ The app posts JSON to `LOGIC_APP_WEBHOOK_URL` with shape:
 
 Tip (Logic Apps): Use "Parse JSON" action with "Use sample payload to generate schema" for clean Dynamic Content.
 
-## SMS (Optional)
+## SMS 
 - Requires Azure Communication Services connection string and a purchased phone number
 - Controlled by env vars; if missing, the API disables SMS endpoints gracefully
 
