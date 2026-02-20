@@ -315,7 +315,10 @@ def patient_intake_form(token):
     # Validate token
     payload = token_manager.validate_token(token)
     if not payload:
-        app.logger.warning(f"Invalid token access attempt: {token[:20]}...")
+        # Log more details for debugging
+        token_preview = token[:50] + "..." if len(token) > 50 else token
+        app.logger.warning(f"Invalid token access attempt. Token preview: {token_preview}")
+        app.logger.debug(f"Token length: {len(token)}, starts with: {token[:10] if len(token) > 10 else token}")
         return render_template('error.html', 
                              message="Invalid or expired form link. Please contact the clinic for a new link.",
                              error_code="TOKEN_INVALID"), 403
@@ -652,6 +655,44 @@ def health_check():
             'converter': 'operational'
         }
     })
+
+@app.route('/admin/test-token', methods=['POST'])
+def test_token():
+    """
+    Test endpoint to generate and validate a token for debugging
+    """
+    try:
+        data = request.get_json() or {}
+        patient_id = data.get('patient_id', 'test-patient-' + secrets.token_hex(4))
+        clinic_id = data.get('clinic_id', 'test-clinic')
+        
+        # Generate token
+        token = token_manager.generate_token(patient_id, clinic_id)
+        
+        # Validate token immediately
+        payload = token_manager.validate_token(token)
+        
+        base_url = request.host_url.rstrip('/')
+        form_url = f"{base_url}/intake/{token}"
+        
+        return jsonify({
+            'success': True,
+            'token': token,
+            'token_length': len(token),
+            'token_preview': token[:30] + '...' if len(token) > 30 else token,
+            'form_url': form_url,
+            'validation_result': 'valid' if payload else 'invalid',
+            'payload': payload,
+            'patient_id': patient_id,
+            'clinic_id': clinic_id,
+            'instructions': 'Use the form_url to test the intake form in your browser'
+        })
+    except Exception as e:
+        app.logger.error(f"Token test error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 @app.errorhandler(404)
 def not_found(error):

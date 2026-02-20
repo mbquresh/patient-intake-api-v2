@@ -47,7 +47,17 @@ class TokenManager:
                 
             return payload
             
-        except (SignatureExpired, BadSignature, ValueError):
+        except SignatureExpired:
+            # Token has expired
+            return None
+        except BadSignature:
+            # Token signature is invalid (wrong secret key or corrupted token)
+            return None
+        except ValueError as e:
+            # Token format is invalid or missing required fields
+            return None
+        except Exception as e:
+            # Catch any other unexpected errors
             return None
     
     def generate_form_url(self, base_url, patient_identifier, clinic_id="default"):
